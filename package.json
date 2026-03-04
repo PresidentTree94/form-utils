@@ -1,5 +1,5 @@
 {
-  "name": "@karly/form-utils",
+  "name": "@presidenttree94/form-utils",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
