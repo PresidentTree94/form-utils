@@ -1,6 +1,7 @@
 export declare function useFormState<T>(initial: T): {
     form: T;
-    update: (key: keyof T, value: any) => void;
+    update: <K extends keyof T>(key: K, value: T[K]) => void;
+    patch: (newValues: Partial<T>) => void;
     reset: () => void;
     setForm: import("react").Dispatch<import("react").SetStateAction<T>>;
 };

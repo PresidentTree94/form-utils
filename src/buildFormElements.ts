@@ -1,16 +1,24 @@
+import { FieldConfig, Schema } from "./types";
+
 export function buildFormElements<T extends object>(
   form: T,
-  update: (key: keyof T, value: any) => void,
-  schema: Record<string, any>
-) {
+  update: <K extends keyof T>(key: K, value: T[K]) => void,
+  schema: Schema<T>
+): {
+  [K in keyof T]: FieldConfig<T, K> & {
+    value: T[K];
+    setValue: (value: T[K]) => void;
+  };
+} {
+  const entries = Object.entries(schema) as [keyof T, FieldConfig<T, keyof T>][];
   return Object.fromEntries(
-    Object.entries(schema).map(([key, config]) => [
+    entries.map(([key, config]) => [
       key,
       {
         ...config,
-        value: form[key as keyof T],
-        setValue: (value: any) => update(key as keyof T, value),
+        value: form[key],
+        setValue: (value: T[typeof key]) => update(key, value)
       }
     ])
-  );
+  ) as any;
 }

@@ -1,10 +1,11 @@
 export function buildFormElements(form, update, schema) {
-    return Object.fromEntries(Object.entries(schema).map(([key, config]) => [
+    const entries = Object.entries(schema);
+    return Object.fromEntries(entries.map(([key, config]) => [
         key,
         {
             ...config,
             value: form[key],
-            setValue: (value) => update(key, value),
+            setValue: (value) => update(key, value)
         }
     ]));
 }
