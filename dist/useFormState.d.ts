@@ -1,4 +1,4 @@
-export default function useFormState<T>(initial: T): {
+export declare function useFormState<T>(initial: T): {
     form: T;
     update: (key: keyof T, value: any) => void;
     reset: () => void;

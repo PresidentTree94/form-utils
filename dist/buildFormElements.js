@@ -1,4 +1,4 @@
-export default function buildFormElements(form, update, schema) {
+export function buildFormElements(form, update, schema) {
     return Object.fromEntries(Object.entries(schema).map(([key, config]) => [
         key,
         {
