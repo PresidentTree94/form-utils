@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-export function FormField({ field }) {
+export function FormField({ field, className = "form-field" }) {
     const { label, type = "text", value, setValue, options } = field;
     let input;
     switch (type) {
@@ -12,5 +12,5 @@ export function FormField({ field }) {
         default:
             input = (_jsx("input", { type: type, value: String(value), onChange: e => setValue(e.target.value) }));
     }
-    return (_jsx("div", { className: "form-field", children: _jsxs("label", { children: [label, input] }) }));
+    return (_jsxs("div", { className: `${className || ""}`, children: [_jsx("label", { children: label }), input] }));
 }

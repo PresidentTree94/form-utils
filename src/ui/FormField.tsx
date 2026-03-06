@@ -1,9 +1,10 @@
 import { BoundField } from "../core/types";
 
 export function FormField<T, K extends keyof T>({
-  field
+  field, className = "form-field"
 }: {
   field: BoundField<T, K>;
+  className?: string;
 }) {
   const { label, type = "text", value, setValue, options } = field;
 
@@ -14,9 +15,7 @@ export function FormField<T, K extends keyof T>({
       input = (
         <select value={String(value)} onChange={e => setValue(e.target.value as T[K])}>
           {options?.map(opt => 
-            <option key={String(opt)} value={String(opt)}>
-              {String(opt)}
-            </option>
+            <option key={String(opt)} value={String(opt)}>{String(opt)}</option>
           )}
         </select>
       );
@@ -32,11 +31,9 @@ export function FormField<T, K extends keyof T>({
       );
   }
   return (
-    <div className="form-field">
-      <label>
-        {label}
-        {input}
-      </label>
+    <div className={`${className || ""}`}>
+      <label>{label}</label>
+      {input}
     </div>
   );
 }
