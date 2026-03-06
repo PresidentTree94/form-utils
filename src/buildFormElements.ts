@@ -11,10 +11,11 @@ export function buildFormElements<T extends object>(
   const fields = {} as { [K in keyof T]: BoundField<T, K> };
 
   for (const key in schema) {
-    fields[key] = {
-      ...schema[key],
-      value: form[key],
-      setValue: (value) => update(key, value)
+    const k = key as keyof T;
+    fields[k] = {
+      ...schema[k],
+      value: form[k],
+      setValue: (value: any) => update(k, value as T[typeof k])
     };
   }
 

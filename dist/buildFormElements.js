@@ -1,10 +1,11 @@
 export function buildFormElements(form, update, schema) {
     const fields = {};
     for (const key in schema) {
-        fields[key] = {
-            ...schema[key],
-            value: form[key],
-            setValue: (value) => update(key, value)
+        const k = key;
+        fields[k] = {
+            ...schema[k],
+            value: form[k],
+            setValue: (value) => update(k, value)
         };
     }
     return fields;
