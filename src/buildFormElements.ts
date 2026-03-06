@@ -1,4 +1,4 @@
-import { FieldConfig, Schema, BoundField } from "./types";
+import { Schema, BoundField } from "./types";
 
 export function buildFormElements<T extends object>(
   form: T,
@@ -7,15 +7,16 @@ export function buildFormElements<T extends object>(
 ): {
   [K in keyof T]: BoundField<T, K>;
 } {
-  const entries = Object.entries(schema) as [keyof T, FieldConfig<T, keyof T>][];
-  return Object.fromEntries(
-    entries.map(([key, config]) => [
-      key,
-      {
-        ...config,
-        value: form[key],
-        setValue: (value: T[typeof key]) => update(key, value)
-      }
-    ])
-  ) as any;
+
+  const fields = {} as { [K in keyof T]: BoundField<T, K> };
+
+  for (const key in schema) {
+    fields[key] = {
+      ...schema[key],
+      value: form[key],
+      setValue: (value) => update(key, value)
+    };
+  }
+
+  return fields;
 }

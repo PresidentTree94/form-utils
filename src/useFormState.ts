@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export function useFormState<T>(initial: T) {
   const [form, setForm] = useState<T>(initial);
 
-  const update = <K extends keyof T>(key: K, value: T[K]) => setForm(prev => ({ ...prev, [key]: value }));
+  const update = useCallback(<K extends keyof T>(key: K, value: T[K]) => setForm(prev => ({ ...prev, [key]: value })), []);
 
-  const patch = (newValues: Partial<T>) => setForm(prev => ({ ...prev, ...newValues }));
+  const patch = useCallback((newValues: Partial<T>) => setForm(prev => ({ ...prev, ...newValues })), []);
 
-  const reset = () => setForm(initial);
+  const reset = useCallback(() => setForm({ ...initial }), []);
   
   return { form, update, patch, reset };
 }
