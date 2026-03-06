@@ -14,7 +14,7 @@ export function buildFormElements<T extends object>(
     fields[key] = {
       ...schema[key],
       value: form[key],
-      setValue: (value: any) => update(key, value)
+      setValue: (value) => update(key, value)
     };
   }
 

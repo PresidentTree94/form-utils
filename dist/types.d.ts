@@ -9,5 +9,5 @@ export type Schema<T> = {
 };
 export type BoundField<T, K extends keyof T> = FieldConfig & {
     value: T[K];
-    setValue: (value: T[K] extends string ? string : T[K]) => void;
+    setValue: (value: T[K]) => void;
 };
