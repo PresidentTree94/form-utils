@@ -1,5 +1,6 @@
 import { BoundField } from "../core/types";
-export declare function FormField<T, K extends keyof T>({ field, className }: {
+export declare function FormField<T, K extends keyof T>({ field, labelClassName, inputClassName }: {
     field: BoundField<T, K>;
-    className?: string;
+    labelClassName?: string;
+    inputClassName?: string;
 }): import("react/jsx-runtime").JSX.Element;

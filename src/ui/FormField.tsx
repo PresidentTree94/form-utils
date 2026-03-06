@@ -1,19 +1,21 @@
 import { BoundField } from "../core/types";
 
 export function FormField<T, K extends keyof T>({
-  field, className = "form-field"
+  field, labelClassName, inputClassName
 }: {
   field: BoundField<T, K>;
-  className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
 }) {
-  const { label, type = "text", value, setValue, options } = field;
+  const { label, type, value, setValue, options } = field;
 
   let input: JSX.Element;
 
   switch (type) {
-    case "select":
+    case "single-select":
+    case "multi-select":
       input = (
-        <select value={String(value)} onChange={e => setValue(e.target.value as T[K])}>
+        <select {...(type === "single-select" ? {} : {multiple: true})} className={inputClassName} value={String(value)} onChange={e => setValue(e.target.value as T[K])}>
           {options?.map(opt => 
             <option key={String(opt)} value={String(opt)}>{String(opt)}</option>
           )}
@@ -22,18 +24,18 @@ export function FormField<T, K extends keyof T>({
       break;
     case "number":
       input = (
-        <input type="number" value={Number(value)} onChange={e => setValue(Number(e.target.value) as T[K])} />
+        <input type="number" className={inputClassName} value={Number(value)} onChange={e => setValue(Number(e.target.value) as T[K])} />
       );
       break;
     default:
       input = (
-        <input type={type} value={String(value)} onChange={e => setValue(e.target.value as T[K])} />
+        <input type={type} className={inputClassName} value={String(value)} onChange={e => setValue(e.target.value as T[K])} />
       );
   }
   return (
-    <div className={`${className || ""}`}>
-      <label>{label}</label>
+    <>
+      <label className={labelClassName}>{label}</label>
       {input}
-    </div>
+    </>
   );
 }
