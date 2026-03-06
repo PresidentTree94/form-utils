@@ -9,5 +9,5 @@ export function useFormState<T>(initial: T) {
 
   const reset = () => setForm(initial);
   
-  return { form, update, patch, reset, setForm };
+  return { form, update, patch, reset };
 }

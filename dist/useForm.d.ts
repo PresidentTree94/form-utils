@@ -10,5 +10,4 @@ export declare function useForm<T extends object>(initial: T, schema: Schema<T>)
     update: <K extends keyof T>(key: K, value: T[K]) => void;
     patch: (values: Partial<T>) => void;
     reset: () => void;
-    setForm: React.Dispatch<React.SetStateAction<T>>;
 };

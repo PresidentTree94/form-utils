@@ -4,5 +4,5 @@ export function useFormState(initial) {
     const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
     const patch = (newValues) => setForm(prev => ({ ...prev, ...newValues }));
     const reset = () => setForm(initial);
-    return { form, update, patch, reset, setForm };
+    return { form, update, patch, reset };
 }
