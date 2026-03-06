@@ -1,15 +1,14 @@
-export type FieldConfig = {
+export type FieldConfig<T> = {
   label: string;
-  type?: string;
-  options?: string[];
+  options?: T[];
   [key: string]: unknown;
 };
 
 export type Schema<T> = {
-  [K in keyof T]: FieldConfig;
+  [K in keyof T]: FieldConfig<T[K]>;
 };
 
-export type BoundField<T, K extends keyof T> = FieldConfig & {
+export type BoundField<T, K extends keyof T> = FieldConfig<T[K]> & {
   value: T[K];
   setValue: (value: T[K]) => void;
 };
