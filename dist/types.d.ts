@@ -2,7 +2,7 @@ export type FieldConfig<T> = {
     label: string;
     type?: string;
     required?: boolean;
-    options?: T[];
+    options?: (T extends (infer U)[] ? U : T)[];
     [key: string]: unknown;
 };
 export type Schema<T> = {
