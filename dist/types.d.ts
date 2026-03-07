@@ -1,6 +1,7 @@
 export type FieldConfig<T> = {
     label: string;
     type?: string;
+    required?: boolean;
     options?: T[];
     [key: string]: unknown;
 };
