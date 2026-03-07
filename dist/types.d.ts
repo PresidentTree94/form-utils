@@ -1,5 +1,6 @@
 export type FieldConfig<T> = {
     label: string;
+    type?: string;
     options?: T[];
     [key: string]: unknown;
 };
