@@ -22,6 +22,6 @@ export function useForm(initial, initialSchema) {
             };
         }
         return result;
-    }, [form, schema]);
+    }, [form, schema, setField]);
     return { form, fields, setField, patch, reset, setSchema };
 }

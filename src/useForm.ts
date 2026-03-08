@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
 import { Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initial: T, initialSchema?: Schema<T>) {
+export function useForm<T extends object>(
+  initial: T,
+  initialSchema?: Schema<T>
+) {
   const [form, setForm] = useState<T>(initial);
   const [schema, setSchema] = useState<Schema<T> | undefined>(initialSchema);
 
@@ -31,7 +34,7 @@ export function useForm<T extends object>(initial: T, initialSchema?: Schema<T>)
     }
 
     return result;
-  }, [form, schema]);
+  }, [form, schema, setField]);
 
   return { form, fields, setField, patch, reset, setSchema };
 }
