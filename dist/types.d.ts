@@ -1,14 +1,13 @@
-export type FieldConfig<T> = {
-    label: string;
+export type FieldConfig<Value> = {
+    label?: string;
     type?: string;
     required?: boolean;
-    options?: (T extends (infer U)[] ? U : T)[];
-    [key: string]: unknown;
+    options?: Value[];
 };
-export type Schema<T> = {
+export type Schema<T extends object> = {
     [K in keyof T]: FieldConfig<T[K]>;
 };
-export type BoundField<T, K extends keyof T> = FieldConfig<T[K]> & {
-    value: T[K];
-    setValue: (value: T[K]) => void;
+export type FormElement<Value> = FieldConfig<Value> & {
+    value: Value;
+    setValue: (value: Value) => void;
 };
