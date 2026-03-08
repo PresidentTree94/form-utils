@@ -1,28 +1,27 @@
 import { useState, useMemo } from "react";
-export function useForm(initial, schema) {
-    const [form, setForm] = useState(initial);
-    const [config, setConfig] = useState(schema);
+export function useForm(initialForm, initialSchema) {
+    const [form, setForm] = useState(initialForm);
+    const [schema, setSchema] = useState(initialSchema);
     const setField = (key, value) => {
         setForm(prev => ({ ...prev, [key]: value }));
     };
     const patch = (values) => {
         setForm(prev => ({ ...prev, ...values }));
     };
-    const reset = () => setForm(initial);
-    const updateConfig = (key, newConfig) => {
-        setConfig(prev => ({ ...prev, [key]: { ...prev[key], ...newConfig } }));
-    };
+    const reset = () => setForm(initialForm);
     const fields = useMemo(() => {
+        if (!schema)
+            return undefined;
         const result = {};
-        for (const key in config) {
+        for (const key in schema) {
             const typedKey = key;
             result[typedKey] = {
-                ...config[typedKey],
+                ...schema[typedKey],
                 value: form[typedKey],
                 setValue: (value) => setField(typedKey, value)
             };
         }
         return result;
-    }, [form, config]);
-    return { form, fields, setField, patch, reset, updateConfig };
+    }, [form, schema]);
+    return { form, fields, setField, patch, reset, setSchema };
 }

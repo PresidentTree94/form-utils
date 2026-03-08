@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
-import { FieldConfig, Schema, BoundField } from "./types";
+import { Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initial: T, schema: Schema<T>) {
-  const [form, setForm] = useState<T>(initial);
-  const [config, setConfig] = useState<Schema<T>>(schema);
+export function useForm<T extends object>(initialForm: T, initialSchema?: Schema<T>) {
+  const [form, setForm] = useState<T>(initialForm);
+  const [schema, setSchema] = useState<Schema<T> | undefined>(initialSchema);
 
   const setField = <K extends keyof T>(key: K, value: T[K]) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -13,27 +13,25 @@ export function useForm<T extends object>(initial: T, schema: Schema<T>) {
     setForm(prev => ({ ...prev, ...values }));
   };
 
-  const reset = () => setForm(initial);
-
-  const updateConfig = <K extends keyof T>(key: K, newConfig: Partial<FieldConfig<T[K]>>) => {
-    setConfig(prev => ({ ...prev, [key]: { ...prev[key], ...newConfig } }));
-  };
+  const reset = () => setForm(initialForm);
 
   const fields = useMemo(() => {
+    if (!schema) return undefined;
+
     const result = {} as { [K in keyof T]: BoundField<T, K> };
 
-    for (const key in config) {
+    for (const key in schema) {
       const typedKey = key as keyof T;
 
       result[typedKey] = {
-        ...config[typedKey],
+        ...schema[typedKey],
         value: form[typedKey],
         setValue: (value) => setField(typedKey, value)
       };
     }
 
     return result;
-  }, [form, config]);
+  }, [form, schema]);
 
-  return { form, fields, setField, patch, reset, updateConfig };
+  return { form, fields, setField, patch, reset, setSchema };
 }
