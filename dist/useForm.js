@@ -9,9 +9,6 @@ export function useForm(initial, schema) {
         setForm(prev => ({ ...prev, ...values }));
     };
     const reset = () => setForm(initial);
-    const setFieldConfig = (key, config) => {
-        setConfig(prev => ({ ...prev, [key]: { ...prev[key], ...config } }));
-    };
     const fields = useMemo(() => {
         const result = {};
         for (const key in config) {
@@ -19,10 +16,13 @@ export function useForm(initial, schema) {
             result[typedKey] = {
                 ...config[typedKey],
                 value: form[typedKey],
-                setValue: (value) => setField(typedKey, value)
+                setValue: (value) => setField(typedKey, value),
+                setOptions: (options) => {
+                    setConfig(prev => ({ ...prev, [typedKey]: { ...prev[typedKey], options } }));
+                }
             };
         }
         return result;
     }, [form, config]);
-    return { form, fields, setField, patch, reset, setFieldConfig };
+    return { form, fields, setField, patch, reset };
 }

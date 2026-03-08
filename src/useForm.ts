@@ -15,10 +15,6 @@ export function useForm<T extends object>(initial: T, schema: Schema<T>) {
 
   const reset = () => setForm(initial);
 
-  const setFieldConfig = <K extends keyof T>(key: K, config: Partial<FieldConfig<T[K]>>) => {
-    setConfig(prev => ({ ...prev, [key]: { ...prev[key], ...config }}));
-  };
-
   const fields = useMemo(() => {
     const result = {} as { [K in keyof T]: BoundField<T, K> };
 
@@ -28,12 +24,15 @@ export function useForm<T extends object>(initial: T, schema: Schema<T>) {
       result[typedKey] = {
         ...config[typedKey],
         value: form[typedKey],
-        setValue: (value) => setField(typedKey, value)
+        setValue: (value) => setField(typedKey, value),
+        setOptions: (options: FieldConfig<T[typeof typedKey]>["options"]) => {
+          setConfig(prev => ({ ...prev, [typedKey]: { ...prev[typedKey], options }}));
+        }
       };
     }
 
     return result;
   }, [form, config]);
 
-  return { form, fields, setField, patch, reset, setFieldConfig };
+  return { form, fields, setField, patch, reset };
 }
