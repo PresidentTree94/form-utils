@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initialForm: T, initialSchema?: Schema<T>) {
-  const [form, setForm] = useState<T>(initialForm);
+export function useForm<T extends object>(initial: T, initialSchema?: Schema<T>) {
+  const [form, setForm] = useState<T>(initial);
   const [schema, setSchema] = useState<Schema<T> | undefined>(initialSchema);
 
   const setField = <K extends keyof T>(key: K, value: T[K]) => {
@@ -13,7 +13,7 @@ export function useForm<T extends object>(initialForm: T, initialSchema?: Schema
     setForm(prev => ({ ...prev, ...values }));
   };
 
-  const reset = () => setForm(initialForm);
+  const reset = () => setForm(initial);
 
   const fields = useMemo(() => {
     if (!schema) return undefined;
