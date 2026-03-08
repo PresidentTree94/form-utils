@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
-export function useForm(initial, schema, dynamicConfig) {
+import { useState, useMemo } from "react";
+export function useForm(initial, schema) {
     const [form, setForm] = useState(initial);
-    const [config, setConfig] = useState(schema);
+    const config = useMemo(() => {
+        return typeof schema === "function" ? schema(form) : schema;
+    }, [schema, form]);
     const setField = (key, value) => {
         setForm(prev => ({ ...prev, [key]: value }));
     };
@@ -9,21 +11,6 @@ export function useForm(initial, schema, dynamicConfig) {
         setForm(prev => ({ ...prev, ...values }));
     };
     const reset = () => setForm(initial);
-    useEffect(() => {
-        if (dynamicConfig) {
-            setConfig(prev => {
-                const updated = { ...prev };
-                for (const key in dynamicConfig) {
-                    const typedKey = key;
-                    updated[typedKey] = {
-                        ...updated[typedKey],
-                        ...dynamicConfig[typedKey]
-                    };
-                }
-                return updated;
-            });
-        }
-    }, [dynamicConfig]);
     const fields = useMemo(() => {
         const result = {};
         for (const key in config) {
