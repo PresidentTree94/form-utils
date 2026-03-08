@@ -1,9 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 export function useForm(initial, schema) {
     const [form, setForm] = useState(initial);
-    const config = useMemo(() => {
-        return typeof schema === "function" ? schema(form) : schema;
-    }, [schema, form]);
+    const schemaInput = useMemo(() => {
+        return typeof schema === "function" ? schema() : schema;
+    }, [schema]);
+    const [config, setConfig] = useState(schemaInput);
+    useEffect(() => {
+        setConfig(schemaInput);
+    }, [schemaInput]);
     const setField = (key, value) => {
         setForm(prev => ({ ...prev, [key]: value }));
     };

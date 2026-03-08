@@ -1,12 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initial: T, schema: Schema<T> | ((form: T) => Schema<T>)) {
+export function useForm<T extends object>(initial: T, schema: Schema<T> | (() => Schema<T>)) {
   const [form, setForm] = useState<T>(initial);
   
-  const config = useMemo(() => {
-    return typeof schema === "function" ? schema(form) : schema;
-  }, [schema, form]);
+  const schemaInput = useMemo(() => {
+    return typeof schema === "function" ? schema() : schema;
+  }, [schema]);
+
+  const [config, setConfig] = useState<Schema<T>>(schemaInput);
+
+  useEffect(() => {
+    setConfig(schemaInput);
+  }, [schemaInput]);
 
   const setField = <K extends keyof T>(key: K, value: T[K]) => {
     setForm(prev => ({ ...prev, [key]: value }));
