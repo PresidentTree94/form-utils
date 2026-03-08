@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
-import { FieldConfig, Schema, BoundField } from "./types";
+import { useState, useEffect, useMemo } from "react";
+import { Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initial: T, schema: Schema<T>) {
+export function useForm<T extends object>(initial: T, schema: Schema<T>, dynamicConfig?: Partial<Schema<T>>) {
   const [form, setForm] = useState<T>(initial);
   const [config, setConfig] = useState<Schema<T>>(schema);
 
@@ -15,6 +15,22 @@ export function useForm<T extends object>(initial: T, schema: Schema<T>) {
 
   const reset = () => setForm(initial);
 
+  useEffect(() => {
+    if (dynamicConfig) {
+      setConfig(prev => {
+        const updated = { ...prev };
+        for (const key in dynamicConfig) {
+          const typedKey = key as keyof T;
+          updated[typedKey] = {
+            ...updated[typedKey],
+            ...dynamicConfig[typedKey]
+          };
+        }
+        return updated;
+      });
+    }
+  }, [dynamicConfig]);
+
   const fields = useMemo(() => {
     const result = {} as { [K in keyof T]: BoundField<T, K> };
 
@@ -25,9 +41,6 @@ export function useForm<T extends object>(initial: T, schema: Schema<T>) {
         ...config[typedKey],
         value: form[typedKey],
         setValue: (value) => setField(typedKey, value),
-        setOptions: (options: FieldConfig<T[typeof typedKey]>["options"]) => {
-          setConfig(prev => ({ ...prev, [typedKey]: { ...prev[typedKey], options }}));
-        }
       };
     }
 

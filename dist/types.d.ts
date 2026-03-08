@@ -11,5 +11,4 @@ export type Schema<T> = {
 export type BoundField<T, K extends keyof T> = FieldConfig<T[K]> & {
     value: T[K];
     setValue: (value: T[K]) => void;
-    setOptions: (options: FieldConfig<T[K]>["options"]) => void;
 };

@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-export function useForm(initial, schema) {
+import { useState, useEffect, useMemo } from "react";
+export function useForm(initial, schema, dynamicConfig) {
     const [form, setForm] = useState(initial);
     const [config, setConfig] = useState(schema);
     const setField = (key, value) => {
@@ -9,6 +9,21 @@ export function useForm(initial, schema) {
         setForm(prev => ({ ...prev, ...values }));
     };
     const reset = () => setForm(initial);
+    useEffect(() => {
+        if (dynamicConfig) {
+            setConfig(prev => {
+                const updated = { ...prev };
+                for (const key in dynamicConfig) {
+                    const typedKey = key;
+                    updated[typedKey] = {
+                        ...updated[typedKey],
+                        ...dynamicConfig[typedKey]
+                    };
+                }
+                return updated;
+            });
+        }
+    }, [dynamicConfig]);
     const fields = useMemo(() => {
         const result = {};
         for (const key in config) {
@@ -17,9 +32,6 @@ export function useForm(initial, schema) {
                 ...config[typedKey],
                 value: form[typedKey],
                 setValue: (value) => setField(typedKey, value),
-                setOptions: (options) => {
-                    setConfig(prev => ({ ...prev, [typedKey]: { ...prev[typedKey], options } }));
-                }
             };
         }
         return result;
