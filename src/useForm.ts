@@ -1,18 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
-import { Schema, BoundField } from "./types";
+import { useState, useMemo } from "react";
+import { FieldConfig, Schema, BoundField } from "./types";
 
-export function useForm<T extends object>(initial: T, schema: Schema<T> | (() => Schema<T>)) {
+export function useForm<T extends object>(initial: T, schema: Schema<T>) {
   const [form, setForm] = useState<T>(initial);
-  
-  const schemaInput = useMemo(() => {
-    return typeof schema === "function" ? schema() : schema;
-  }, [schema]);
-
-  const [config, setConfig] = useState<Schema<T>>(schemaInput);
-
-  useEffect(() => {
-    setConfig(schemaInput);
-  }, [schemaInput]);
+  const [config, setConfig] = useState<Schema<T>>(schema);
 
   const setField = <K extends keyof T>(key: K, value: T[K]) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -24,6 +15,10 @@ export function useForm<T extends object>(initial: T, schema: Schema<T> | (() =>
 
   const reset = () => setForm(initial);
 
+  const updateConfig = <K extends keyof T>(key: K, newConfig: Partial<FieldConfig<T[K]>>) => {
+    setConfig(prev => ({ ...prev, [key]: { ...prev[key], ...newConfig } }));
+  };
+
   const fields = useMemo(() => {
     const result = {} as { [K in keyof T]: BoundField<T, K> };
 
@@ -33,12 +28,12 @@ export function useForm<T extends object>(initial: T, schema: Schema<T> | (() =>
       result[typedKey] = {
         ...config[typedKey],
         value: form[typedKey],
-        setValue: (value) => setField(typedKey, value),
+        setValue: (value) => setField(typedKey, value)
       };
     }
 
     return result;
   }, [form, config]);
 
-  return { form, fields, setField, patch, reset };
+  return { form, fields, setField, patch, reset, updateConfig };
 }
