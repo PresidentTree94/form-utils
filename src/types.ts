@@ -3,6 +3,7 @@ export type FieldConfig<Value> = {
   type?: string;
   required?: boolean;
   options?: Value[];
+  parse?: (raw: string) => Value;
 };
 
 export type Schema<T extends object> = {
@@ -11,5 +12,5 @@ export type Schema<T extends object> = {
 
 export type FormElement<Value> = FieldConfig<Value> & {
   value: Value;
-  setValue: (value: Value) => void;
+  setValue: (value: string) => void;
 };
