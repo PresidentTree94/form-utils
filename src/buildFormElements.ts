@@ -1,6 +1,6 @@
 import { Schema, FormElement, FieldConfig } from "./types";
 
-function interParse<Value>(config: FieldConfig<Value>, raw: string | string[]): Value | Value[] {
+function interParse<Value, Option>(config: FieldConfig<Value, Option>, raw: string | string[]): Value | Value[] {
   if (config.multi) {
     const raws = Array.isArray(raw) ? raw : [raw];
 
@@ -47,3 +47,61 @@ export function buildFormElements<T extends object>(
 
   return result;
 }
+
+/*export function buildFormElements<T extends object>(
+  form: T,
+  update: <K extends keyof T>(key: K, value: T[K]) => void,
+  schema: Schema<T>
+): { [K in keyof T]: FormElement<T[K]> } {
+  const result = {} as { [K in keyof T]: FormElement<T[K]> };
+
+  for (const key in schema) {
+    const config = schema[key];
+    result[key] = {
+      ...config,
+      value: form[key],
+      setValue: (raw: string | string[]) => {
+        const value = config.parse ? config.parse(raw) : interParse(config, raw);
+        update(key, value as T[typeof key]);
+      }
+    };
+  }
+
+  return result;
+}*/
+
+/*
+export function buildFormElements<T extends object>(
+  form: T,
+  update: <K extends keyof T>(key: K, value: T[K]) => void,
+  schema: Schema<T>
+): {
+  [K in keyof T]: T[K] extends (infer U)
+    ? FormElement<T[K], U>
+    : FormElement<T[K]>;
+} {
+  const result = {} as {
+    [K in keyof T]: T[K] extends (infer U)
+      ? FormElement<T[K], U>
+      : FormElement<T[K]>;
+  };
+
+  for (const key in schema) {
+    const k = key as keyof T;
+    const config = schema[k] as any;
+
+    result[k] = {
+      ...config,
+      value: form[k],
+      setValue: (raw: string | string[]) => {
+        const value = config.parse
+          ? config.parse(raw)
+          : interParse(config, raw);
+        update(k, value as T[typeof k]);
+      }
+    } as any;
+  }
+
+  return result;
+}
+*/
