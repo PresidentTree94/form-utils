@@ -1,4 +1,13 @@
 function interParse(config, raw) {
+    if (config.multi) {
+        const raws = Array.isArray(raw) ? raw : [raw];
+        if (config.options) {
+            return raws
+                .map(r => config.options.find(o => String(o) === r))
+                .filter(Boolean);
+        }
+        return raws;
+    }
     if (config.options) {
         const match = config.options.find(o => String(o) === raw);
         if (match)

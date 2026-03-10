@@ -1,6 +1,18 @@
 import { Schema, FormElement, FieldConfig } from "./types";
 
-function interParse<Value>(config: FieldConfig<Value>, raw: string): Value {
+function interParse<Value>(config: FieldConfig<Value>, raw: string | string[]): Value | Value[] {
+  if (config.multi) {
+    const raws = Array.isArray(raw) ? raw : [raw];
+
+    if (config.options) {
+      return raws
+        .map(r => config.options!.find(o => String(o) === r))
+        .filter(Boolean) as Value[];
+    }
+
+    return raws as Value[];
+  }
+  
   if (config.options) {
     const match = config.options.find(o => String(o) === raw);
     if (match) return match as Value;
@@ -26,7 +38,7 @@ export function buildFormElements<T extends object>(
     result[key] = {
       ...config,
       value: form[key],
-      setValue: (raw: string) => {
+      setValue: (raw: string | string[]) => {
         const value = config.parse ? config.parse(raw) : interParse(config, raw);
         update(key, value as T[typeof key]);
       }
