@@ -3,6 +3,7 @@ export type FieldConfig<Value, Option = Value> = {
     type?: string;
     required?: boolean;
     options?: Option[];
+    multi?: boolean;
     defaultOption?: string;
     parse?: (raw: string | string[]) => Value | Value[];
 };
