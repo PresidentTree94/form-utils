@@ -1,5 +1,5 @@
 function interParse(config, raw) {
-    if (config.multi) {
+    if (!config.defaultOption && config.options) {
         const raws = Array.isArray(raw) ? raw : [raw];
         if (config.options) {
             return raws

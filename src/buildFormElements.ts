@@ -1,7 +1,7 @@
 import { Schema, FormElement, FieldConfig } from "./types";
 
 function interParse<Value, Option>(config: FieldConfig<Value, Option>, raw: string | string[]): Value | Value[] {
-  if (config.multi) {
+  if (!config.defaultOption && config.options) {
     const raws = Array.isArray(raw) ? raw : [raw];
 
     if (config.options) {
