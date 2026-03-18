@@ -1,22 +1,12 @@
 # @presidenttree94/form-utils
 
-React hooks and utilities for managing form state and building typed form elements from a schema.
-
-## Installation
-
-```sh
-npm install @presidenttree94/form-utils
-```
-
-Requires `react >= 18`.
+A tiny, type‑safe form‑handling utility that turns form elements objects and schema into a fully typed form system with parsing and update helpers.
 
 ## The problem
 
 Without this package, wiring up a form with multiple fields means juggling individual `useState` calls and manual `onChange` handlers for each one:
 
 ```tsx
-import { useState } from "react";
-
 function ProfileForm() {
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
