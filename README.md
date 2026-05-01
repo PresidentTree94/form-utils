@@ -52,7 +52,7 @@ This gets tedious fast — every field needs its own state, its own handler, and
 
 ## Installation
 
-I couldn't npm packaging to work, so you install it into a project using `npm install github:PresidentTree94/form-utils`.
+Run `npm install @presidenttree94/form-utils` in the terminal.
 
 ## Using `useForm`
 
