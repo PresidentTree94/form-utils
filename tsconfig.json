@@ -3,7 +3,7 @@
     "jsx": "react-jsx",
     "target": "ES2019",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "declaration": true,
     "outDir": "dist",
     "rootDir": "src",
@@ -13,4 +13,3 @@
   },
   "include": ["src"]
 }
-

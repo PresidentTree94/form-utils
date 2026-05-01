@@ -1,6 +1,6 @@
 # @presidenttree94/form-utils
 
-A tiny, type‑safe form‑handling utility that turns form elements objects and schema into a fully typed form system with parsing and update helpers.
+A tiny, type‑safe utility that turns form elements, objects, and schema into a fully typed form system with parsing and update helpers.
 
 ## The problem
 
@@ -50,6 +50,10 @@ function ProfileForm() {
 
 This gets tedious fast — every field needs its own state, its own handler, and manual type coercion.
 
+## Installation
+
+I couldn't npm packaging to work, so you install it into a project using `npm install github:PresidentTree94/form-utils`.
+
 ## Using `useForm`
 
 `useForm` combines state management and element binding into a single call. You define a schema once, and each field gets a `value` and a `setValue` that handles parsing for you.
@@ -57,21 +61,13 @@ This gets tedious fast — every field needs its own state, its own handler, and
 ```tsx
 import { useForm } from "@presidenttree94/form-utils";
 
-type ProfileFormData = {
-  name: string;
-  age: number;
-  role: string;
-};
-
-const ROLES = ["viewer", "editor", "admin"];
-
 function ProfileForm() {
-  const { form, elements, reset } = useForm<ProfileFormData>(
+  const { form, elements, reset } = useForm(
     { name: "", age: 0, role: "viewer" },
     {
-      name: { label: "Name", type: "text" },
+      name: { label: "Name" }, // "text" type is default
       age:  { label: "Age",  type: "number" },
-      role: { label: "Role", options: ROLES, defaultOption: "Select a role" },
+      role: { label: "Role", options: ["viewer", "editor", "admin"], defaultOption: "Select a role" },
     }
   );
 
@@ -104,7 +100,7 @@ function ProfileForm() {
           onChange={e => elements.role.setValue(e.target.value)}
         >
           <option disabled value="">{elements.role.defaultOption}</option>
-          {elements.role.options?.map(o => (
+          {elements.role.options.map(o => (
             <option key={o} value={o}>{o}</option>
           ))}
         </select>
@@ -120,38 +116,28 @@ function ProfileForm() {
 
 ## Using `useFormState` and `buildFormElements` separately
 
-`useForm` is a convenience wrapper, but you can use the two underlying pieces independently. This is useful when you want to share form state across components or derive elements at a different point in your render tree.
+`useForm` is a convenience wrapper, but you can use the two underlying pieces independently. This is useful when you want to share form state across components, process data before showing the user, or derive elements at a different point in your render tree.
 
 ```tsx
 import { useFormState, buildFormElements } from "@presidenttree94/form-utils";
 
-type ProfileFormData = {
-  name: string;
-  age: number;
-  role: string;
-};
-
-const ROLES = ["viewer", "editor", "admin"];
-
-const schema = {
-  name: { label: "Name", type: "text" },
-  age:  { label: "Age",  type: "number" },
-  role: { label: "Role", options: ROLES },
-};
-
 function ProfileForm() {
   // Step 1: manage state
-  const { form, update, updateMany, reset } = useFormState<ProfileFormData>({
+  const { form, update, updateMany, reset } = useFormState({
     name: "",
     age: 0,
     role: "viewer",
   });
 
+  // Step 2: build elements when needed
+  const elements = buildFormElements(form, update, {
+    name: { label: "Name" },
+    age:  { label: "Age",  type: "number" },
+    role: { label: "Role", options: ["viewer", "editor", "admin"], defaultOption: "Select a role" },
+  });
+
   // Bulk-update multiple fields at once (e.g. pre-filling from an API response)
   const prefill = () => updateMany({ name: "Alice", age: 30 });
-
-  // Step 2: build elements when needed (e.g. passed down to a sub-component)
-  const elements = buildFormElements(form, update, schema);
 
   const handleSubmit = () => {
     console.log(form);
@@ -159,33 +145,32 @@ function ProfileForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        {elements.name.label}
-        <input
-          type={elements.name.type}
-          value={elements.name.value}
-          onChange={e => elements.name.setValue(e.target.value)}
-        />
-      </label>
-      <label>
-        {elements.age.label}
-        <input
-          type={elements.age.type}
-          value={elements.age.value}
-          onChange={e => elements.age.setValue(e.target.value)}
-        />
-      </label>
-      <label>
-        {elements.role.label}
-        <select
-          value={elements.role.value}
-          onChange={e => elements.role.setValue(e.target.value)}
-        >
-          {elements.role.options?.map(o => (
-            <option key={o} value={o}>{o}</option>
-          ))}
-        </select>
-      </label>
+
+      {/* You can loop elements now! */}
+      {Object.entries(elements).map(([key, field]) => (
+        field.options ?
+        <label>
+          {field.label}
+          <select
+            value={field.value}
+            onChange={e => field.setValue(e.target.value)}
+          >
+            <option disabled value="">{field.defaultOption}</option>
+            {field.options.map(o => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+        :
+        <label>
+          {field.label}
+          <input
+            type={field.type}
+            value={field.value}
+            onChange={e => field.setValue(e.target.value)}
+          />
+        </label>
+      ))}
       <button type="submit">Save</button>
       <button type="button" onClick={prefill}>Pre-fill</button>
       <button type="button" onClick={reset}>Reset</button>
