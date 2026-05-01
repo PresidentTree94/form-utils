@@ -11,6 +11,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "react": ">=18 <20",
     "react-dom": ">=18 <20"
