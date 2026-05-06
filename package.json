@@ -1,6 +1,13 @@
 {
   "name": "@presidenttree94/form-utils",
   "version": "1.0.4",
+  "keywords": [
+    "forms",
+    "form-utilities",
+    "html-forms",
+    "schema",
+    "typescript"
+  ],
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
