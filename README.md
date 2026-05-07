@@ -50,6 +50,14 @@ function ProfileForm() {
 
 This gets tedious fast — every field needs its own state, its own handler, and manual type coercion.
 
+## Who This Package Is For
+This library is designed for developers who want strongly typed, schema‑driven form state without adopting a full form framework. It’s a great fit if you:
+- Prefer type‑safe form state that updates automatically as your schema changes
+- Want to avoid writing one useState per field or manually parsing values from inputs
+- Like the idea of defining your form once and getting helpers, parsing, and state management for free
+- Need a tiny, dependency‑free utility that plays nicely with React but doesn’t lock you into any framework
+- Want predictable, explicit control over your form logic without magic or hidden behavior
+
 ## Installation
 
 Run `npm install @presidenttree94/form-utils` in the terminal.
