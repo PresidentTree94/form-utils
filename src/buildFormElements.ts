@@ -1,7 +1,9 @@
 import { Schema, FormElement, FieldConfig } from "./types";
 
+// Default parser used when no custom config.parse is provided.
 function interParse<Value, Option>(config: FieldConfig<Value, Option>, raw: string | string[]): Value | Value[] {
   if (config.multi) {
+    // Multi-select: normalize to array of raw strings
     const raws = Array.isArray(raw) ? raw : [raw];
 
     if (config.options) {
@@ -13,11 +15,13 @@ function interParse<Value, Option>(config: FieldConfig<Value, Option>, raw: stri
     return raws as Value[];
   }
   
+  // Single value: match against options if provided
   if (config.options) {
     const match = config.options.find(o => String(o) === raw);
     if (match) return match as Value;
   }
 
+  // Fallback parsing based on field type
   switch (config.type) {
     case "number":
       return Number(raw) as Value;
@@ -26,6 +30,7 @@ function interParse<Value, Option>(config: FieldConfig<Value, Option>, raw: stri
   }
 }
 
+// Turns form state + schema into a set of typed form elements with setters.
 export function buildFormElements<T extends object>(
   form: T,
   update: <K extends keyof T>(key: K, value: T[K]) => void,
@@ -39,6 +44,7 @@ export function buildFormElements<T extends object>(
       ...config,
       value: form[key],
       setValue: (raw: string | string[]) => {
+        // Use custom parser if present, otherwise fallback parser
         const value = config.parse ? config.parse(raw) : interParse(config, raw);
         update(key, value as T[typeof key]);
       }

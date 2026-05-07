@@ -2,6 +2,7 @@ import { useFormState } from "./useFormState";
 import { buildFormElements } from "./buildFormElements";
 import { Schema } from "./types";
 
+// Full form system: state + typed elements + update helpers.
 export function useForm<T extends object>(
   initial: T,
   schema: Schema<T>

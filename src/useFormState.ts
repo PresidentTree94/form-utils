@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// Simple React state wrapper for form objects.
 export function useFormState<T extends object>(initial: T) {
   const [form, setForm] = useState<T>(initial);
 
