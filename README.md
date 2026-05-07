@@ -153,8 +153,6 @@ function ProfileForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-
-      {/* You can loop elements now! */}
       {Object.entries(elements).map(([key, field]) => (
         field.options ?
         <label>
