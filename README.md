@@ -1,4 +1,5 @@
 # @presidenttree94/form-utils
+[![npm version](https://img.shields.io/npm/v/@presidenttree94/form-utils)](https://www.npmjs.com/package/@presidenttree94/form-utils) [![npm downloads](https://img.shields.io/npm/dm/@presidenttree94/form-utils)](https://www.npmjs.com/package/@presidenttree94/form-utils) ![license](https://img.shields.io/github/license/PresidentTree94/form-utils) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue) [![bundle size](https://img.shields.io/bundlephobia/minzip/@presidenttree94/form-utils)](https://bundlephobia.com/package/@presidenttree94/form-utils)
 
 A tiny, type‑safe utility that turns form elements, objects, and schema into a fully typed form system with parsing and update helpers.
 
